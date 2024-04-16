@@ -120,26 +120,28 @@ class AuctionManager
     public static function jsonDeserialize(array $data): ?Item {
         $name = $data["id"];
         $count = (int) $data["count"];
-        $tag = isset($data["tag"]) ? $data["tag"] : "";
+        $tag = $data["tag"];
         $itemName = strtolower(str_replace(" ", "_", (string)$name));
         $item = StringToItemParser::getInstance()->parse($itemName);
         $item->setCount($count);
 
-        if (!empty($tag)) {
-            $nbt = JsonNbtParser::parseJson($tag);
-            if ($nbt instanceof CompoundTag) {
-                $item->setNamedTag($nbt);
-            }
+        if($tag !== null) {
+         $item->setNamedTag(unserialize($tag));
         }
 
         return $item;
     }
 
     public static function jsonSerialize($item) {
+        if($item->hasEnchantments()){
+        $tag = serialize($item->getNamedTag());
+        }else{
+        $tag = null;
+        }
         $itemArray = [
             "id" => $item->getVanillaName(),
             "count" => $item->getCount(),
-            "tag" => $item->hasNamedTag() ? $item->getNamedTag()->toString() : null
+            "tag" => $tag
             // Tambahkan properti lain sesuai kebutuhan
         ];
         return json_encode($itemArray);
