@@ -121,28 +121,20 @@ class AuctionManager
         $name = $data["id"];
         $count = (int) $data["count"];
         $tag = $data["tag"];
-        $itemName = strtolower(str_replace(" ", "_", (string)$name));
-        $item = StringToItemParser::getInstance()->parse($itemName);
+        $item = StringToItemParser::getInstance()->parse($name);
         $item->setCount($count);
-
         if($tag !== null) {
-         $item->setNamedTag(unserialize($tag));
+        $item->setNamedTag(unserialize($tag));
         }
 
         return $item;
     }
 
     public static function jsonSerialize($item) {
-        if($item->hasEnchantments()){
-        $tag = serialize($item->getNamedTag());
-        }else{
-        $tag = null;
-        }
         $itemArray = [
             "id" => $item->getVanillaName(),
             "count" => $item->getCount(),
-            "tag" => $tag
-            // Tambahkan properti lain sesuai kebutuhan
+            "tag" => $item->hasNamedTag() ? serialize($item->getNamedTag()) : null;
         ];
         return json_encode($itemArray);
     }
