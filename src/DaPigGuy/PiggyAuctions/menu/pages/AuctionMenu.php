@@ -93,7 +93,7 @@ class AuctionMenu extends Menu
             $this->getInventory()->setItem(29, $bidItem);
             if (!$this->auction->hasExpired() && $this->auction->getAuctioneer() !== $this->player->getName()) $this->getInventory()->setItem(31, VanillaItems::GOLD_INGOT()->setCustomName(PiggyAuctions::getInstance()->getMessage("menus.auction-view.bid-amount", ["{MONEY}" => $this->bidAmount])));
             $this->getInventory()->setItem(49, VanillaItems::ARROW()->setCustomName(PiggyAuctions::getInstance()->getMessage("menus.back")));
-            if ($this->player !== null) {
+            if ($this->player->isOnline()) {
                 $this->player->getNetworkSession()->getInvManager()?->syncContents($this->getInventory());
             }
         });
