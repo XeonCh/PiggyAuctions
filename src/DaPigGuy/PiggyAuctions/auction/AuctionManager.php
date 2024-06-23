@@ -134,7 +134,7 @@ class AuctionManager
         $itemArray = [
             "id" => $item->getVanillaName(),
             "count" => $item->getCount(),
-            "tag" => $item->hasNamedTag() ? serialize($item->getNamedTag()) : null;
+            "tag" => $item->hasNamedTag() ? serialize($item->getNamedTag()) : null
         ];
         return json_encode($itemArray);
     }
