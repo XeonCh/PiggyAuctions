@@ -120,16 +120,11 @@ class AuctionManager
     public static function jsonDeserialize(array $data): ?Item {
         $name = $data["id"];
         $count = (int) $data["count"];
-        $tag = isset($data["tag"]) ? $data["tag"] : "";
-        $itemName = strtolower(str_replace(" ", "_", (string)$name));
-        $item = StringToItemParser::getInstance()->parse($itemName);
+        $tag = $data["tag"];
+        $item = StringToItemParser::getInstance()->parse($name);
         $item->setCount($count);
-
-        if (!empty($tag)) {
-            $nbt = JsonNbtParser::parseJson($tag);
-            if ($nbt instanceof CompoundTag) {
-                $item->setNamedTag($nbt);
-            }
+        if($tag !== null) {
+        $item->setNamedTag(unserialize($tag));
         }
 
         return $item;
@@ -139,8 +134,7 @@ class AuctionManager
         $itemArray = [
             "id" => $item->getVanillaName(),
             "count" => $item->getCount(),
-            "tag" => $item->hasNamedTag() ? $item->getNamedTag()->toString() : null
-            // Tambahkan properti lain sesuai kebutuhan
+            "tag" => $item->hasNamedTag() ? serialize($item->getNamedTag()) : null;
         ];
         return json_encode($itemArray);
     }
