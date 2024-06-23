@@ -19,6 +19,11 @@ class AuctionHouseCommand extends BaseCommand
 {
     /** @var PiggyAuctions */
     protected Plugin $plugin;
+    
+    public function getPermission()
+    {
+        return "piggyauctions.command.auctionhouse";
+    }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
